@@ -1,0 +1,1 @@
+enum MainUIPopupEnum { logout }
