@@ -23,15 +23,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -67,5 +61,25 @@ class DefaultFirebaseOptions {
     projectId: 'kwiatuszki-uwu',
     databaseURL: 'https://kwiatuszki-uwu-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'kwiatuszki-uwu.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCwte0zPFIDKMA49felYh3TyYthobxTVWE',
+    appId: '1:864594858129:ios:76939e93678a72b3072f30',
+    messagingSenderId: '864594858129',
+    projectId: 'kwiatuszki-uwu',
+    databaseURL: 'https://kwiatuszki-uwu-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'kwiatuszki-uwu.appspot.com',
+    iosBundleId: 'com.example.kwiatuszkiDev',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCwte0zPFIDKMA49felYh3TyYthobxTVWE',
+    appId: '1:864594858129:ios:ccf92b459d315d71072f30',
+    messagingSenderId: '864594858129',
+    projectId: 'kwiatuszki-uwu',
+    databaseURL: 'https://kwiatuszki-uwu-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'kwiatuszki-uwu.appspot.com',
+    iosBundleId: 'com.example.kwiatuszkiDev.RunnerTests',
   );
 }

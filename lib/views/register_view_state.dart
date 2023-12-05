@@ -1,15 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kwiatuszki_dev/Views/register_view.dart';
 import 'package:kwiatuszki_dev/constants/routes.dart';
 import 'package:kwiatuszki_dev/constants/strings.dart';
-import 'package:kwiatuszki_dev/services/error_handling.dart';
+import 'package:kwiatuszki_dev/services/auth/auth_exceptions.dart';
+import 'package:kwiatuszki_dev/services/auth/auth_service.dart';
+import 'package:kwiatuszki_dev/utilities/error_handling.dart';
 
 class RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _passwordRepeated;
-  final ErrorHandler _errorHandler = ErrorHandler();
 
   @override
   void initState() {
@@ -54,19 +54,7 @@ class RegisterViewState extends State<RegisterView> {
         ),
         TextButton(
           onPressed: () async {
-            if (_password == _passwordRepeated) {
-              try {
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: _email.text,
-                  password: _password.text,
-                );
-              } on FirebaseAuthException catch (e) {
-                if(!context.mounted) return;
-                _errorHandler.showErrorDialog(context, e.code);
-              }
-            } else {
-              _errorHandler.showErrorDialog(context, 'Passwords are different');
-            }
+            registerUser(_email.text, _password.text, _passwordRepeated.text);
           },
           child: const Text(registerText),
         ),
@@ -83,5 +71,25 @@ class RegisterViewState extends State<RegisterView> {
     );
   }
 
-  registrationMethod(String email, String password, String passwordRepeated) {}
+
+  registerUser(String email, String password, String passwordRepeated) async {
+    if (password == passwordRepeated) {
+              try {
+                await AuthService.firebase().createUser(
+                  email: email,
+                  password: password,
+                );
+              } on InvalidEmailAuthException {
+                if (!context.mounted) return;
+                showErrorDialog(context, invalidEmailErrorMessage);
+              } on WeakPasswordAuthException {
+                if (!context.mounted) return;
+                showErrorDialog(context, weakPasswordErrorMessage);
+              } catch (_) {
+                if (!context.mounted) return;
+                showErrorDialog(context, genericAuthExceptionMessage);
+              }
+            } else {
+              showErrorDialog(context, 'Passwords are different');
+            }}
 }

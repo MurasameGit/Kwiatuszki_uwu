@@ -1,20 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:kwiatuszki_dev/constants/main_ui_menu_enum.dart';
 import 'package:kwiatuszki_dev/constants/routes.dart';
-import 'package:kwiatuszki_dev/services/main_ui_service.dart';
-
+import 'package:kwiatuszki_dev/constants/strings.dart';
+import 'package:kwiatuszki_dev/services/auth/auth_service.dart';
 
 class MainUI extends StatefulWidget {
-  const MainUI({Key? key}) : super(key: key);
+  const MainUI({super.key});
 
   @override
   State<MainUI> createState() => _MainUIState();
 }
 
 class _MainUIState extends State<MainUI> {
-  MainUIService mainUIService = MainUIService();
+  // currently not using mainUIService
+  //MainUIService mainUIService = MainUIService();
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +26,9 @@ class _MainUIState extends State<MainUI> {
               switch (value) {
                 case MainUIPopupEnum.logout:
                   {
-                    if (await mainUIService.showLogOutDialog(context)) {
-                      await FirebaseAuth.instance.signOut();
-                      if (!mounted) return;
+                    if (await showLogOutDialog(context)) {
+                      await AuthService.firebase().logOut();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         loginRoute,
                         (route) => false,
@@ -49,6 +48,39 @@ class _MainUIState extends State<MainUI> {
           )
         ],
       ),
+      body: Container(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
+        onPressed: (){
+          
+        },
+      ),
     );
+  }
+
+  Future<bool> showLogOutDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Yes')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('No')),
+          ],
+          title: const Text(logOutText),
+          content: const Text(areYouSureYouWantToLogOutText),
+        );
+      },
+    ).then((value) => value ?? false);
   }
 }

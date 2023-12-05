@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-class ErrorHandler {
   Future showErrorDialog(BuildContext context, String errorMessage) {
     return showDialog(
         context: context,
@@ -29,4 +28,3 @@ class ErrorHandler {
           );
         });
   }
-}

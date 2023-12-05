@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:kwiatuszki_dev/firebase_options.dart';
 
 import 'package:kwiatuszki_dev/services/auth/auth_exceptions.dart';
 import 'package:kwiatuszki_dev/services/auth/auth_user.dart';
@@ -81,7 +83,7 @@ class FirebaseAuthProvider implements AuthProvider {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseAuth.instance.signOut();
-    }else{
+    } else {
       throw UserNotLoggedInAuthException();
     }
   }
@@ -94,5 +96,13 @@ class FirebaseAuthProvider implements AuthProvider {
     } else {
       throw UserNotLoggedInAuthException();
     }
+  }
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseAuth.instance.currentUser?.reload();
   }
 }

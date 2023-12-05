@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kwiatuszki_dev/constants/routes.dart';
+import 'package:kwiatuszki_dev/services/auth/auth_exceptions.dart';
+import 'package:kwiatuszki_dev/services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
-  const VerifyEmailView({Key? key}) : super(key: key);
+  const VerifyEmailView({super.key});
 
   @override
   State<VerifyEmailView> createState() => _VerifyEmailViewState();
@@ -22,8 +24,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 'Please verify your email and then restart application to continue'),
             TextButton(
                 onPressed: () async {
-                  await FirebaseAuth.instance.currentUser
-                      ?.sendEmailVerification();
+                  try {
+                    await AuthService.firebase().sendEmailVerification();
+                  } on UserNotLoggedInAuthException {
+                    if (!context.mounted) return;
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      loginRoute,
+                      (route) => false,
+                    );
+                  }
                 },
                 child: const Text('Send verification email'))
           ],
