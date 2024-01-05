@@ -1,6 +1,6 @@
 # kwiatuszki_dev
 
-A new Flutter project.
+Student project for automated plant watering system
 
 ## Getting Started
 
