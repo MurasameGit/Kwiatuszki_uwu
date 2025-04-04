@@ -1,6 +1,6 @@
 # kwiatuszki_dev
 
-Student project for automated plant watering system
+Application part of student project for automated plant watering system
 
 ## Getting Started
 
